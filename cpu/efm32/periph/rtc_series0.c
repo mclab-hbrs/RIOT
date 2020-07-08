@@ -51,14 +51,15 @@ static void _set_alarm(void)
        the first 8 bits created by software now match */
     if (overflows == rtc_state.overflows) {
         /* disable interrupt so it doesn't accidentally trigger */
-        RTC_IntDisable(RTC_IEN_COMP0);
+        /* rg: NO CLUE WHAT IM DOING */
+        RTC_IntDisable(RTC_IEN_OF);
 
         /* set compare register */
         RTC_CompareSet(0, rtc_state.alarm & RTC_MAX_VALUE);
 
         /* (re-)enable the interrupt */
-        RTC_IntClear(RTC_IEN_COMP0);
-        RTC_IntEnable(RTC_IEN_COMP0);
+        RTC_IntClear(RTC_IEN_OF);
+        RTC_IntEnable(RTC_IEN_OF);
     }
 }
 
@@ -138,8 +139,8 @@ void rtc_clear_alarm(void)
     rtc_state.alarm_cb = NULL;
     rtc_state.alarm_arg = NULL;
     rtc_state.alarm = 0;
-
-    RTC_IntDisable(RTC_IEN_COMP0);
+    /* rg:  wrong define?*/
+    RTC_IntDisable(RTC_IEN_OF);
 }
 
 void rtc_poweron(void)
@@ -154,13 +155,14 @@ void rtc_poweroff(void)
 
 void isr_rtc(void)
 {
-    if ((RTC_IntGet() & RTC_IF_COMP0)) {
+    /* rg: probably wrong defines, no clue what im doing */
+    if ((RTC_IntGet() & RTC_IFC_OF)) {
         if (rtc_state.alarm_cb != NULL) {
             rtc_state.alarm_cb(rtc_state.alarm_arg);
         }
 
         /* clear interrupt */
-        RTC_IntClear(RTC_IFC_COMP0);
+        RTC_IntClear(RTC_IFC_OF);
     }
     if (RTC_IntGet() & RTC_IF_OF) {
         rtc_state.overflows++;

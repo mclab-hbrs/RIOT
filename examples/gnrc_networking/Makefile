@@ -11,25 +11,8 @@ RIOTBASE ?= $(CURDIR)/../..
 # NOTE: 6LoWPAN will be included if IEEE802.15.4 devices are present
 USEMODULE += gnrc_netdev_default
 USEMODULE += auto_init_gnrc_netif
-# Activate ICMPv6 error messages
-USEMODULE += gnrc_icmpv6_error
-# Specify the mandatory networking modules for IPv6 and UDP
-USEMODULE += gnrc_ipv6_router_default
-USEMODULE += gnrc_udp
-# Add a routing protocol
-USEMODULE += gnrc_rpl
-USEMODULE += auto_init_gnrc_rpl
-# This application dumps received packets to STDIO using the pktdump module
-USEMODULE += gnrc_pktdump
-# Additional networking modules that can be dropped if not needed
-USEMODULE += gnrc_icmpv6_echo
 # Add also the shell, some shell commands
 USEMODULE += shell
-USEMODULE += shell_commands
-USEMODULE += ps
-USEMODULE += netstats_l2
-USEMODULE += netstats_ipv6
-USEMODULE += netstats_rpl
 
 # Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
@@ -48,6 +31,33 @@ DEVELHELP ?= 1
 
 # Change this to 0 show compiler invocation lines by default:
 QUIET ?= 1
+
+# TCP/IP
+LWIP_IPV4 ?= 0
+
+ifneq (0, $(LWIP_IPV4))
+  USEMODULE += ipv4_addr
+  USEMODULE += lwip_arp
+  USEMODULE += lwip_ipv4
+  CFLAGS += -DETHARP_SUPPORT_STATIC_ENTRIES=1
+  LWIP_IPV6 ?= 0
+else
+  LWIP_IPV6 ?= 1
+endif
+
+ifneq (0, $(LWIP_IPV6))
+  USEMODULE += ipv6_addr
+  USEMODULE += lwip_ipv6_autoconfig
+endif
+
+USEMODULE += inet_csum
+USEMODULE += lwip_netdev
+USEMODULE += lwip_sock_tcp
+USEMODULE += netdev_eth
+
+CFLAGS += -DSO_REUSE
+CFLAGS += -DLWIP_SO_RCVTIMEO
+CFLAGS += -DLWIP_SOCK_TCP_ACCEPT_TIMEOUT=500
 
 include $(RIOTBASE)/Makefile.include
 

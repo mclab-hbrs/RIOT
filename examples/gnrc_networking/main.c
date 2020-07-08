@@ -19,26 +19,19 @@
  */
 
 #include <stdio.h>
-
 #include "shell.h"
-#include "msg.h"
 
-#define MAIN_QUEUE_SIZE     (8)
-static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
-
-extern int udp_cmd(int argc, char **argv);
+extern int tcp6_cmd(int argc, char **argv);
 
 static const shell_command_t shell_commands[] = {
-    { "udp", "send data over UDP and listen on UDP ports", udp_cmd },
+    { "tcp6-send", "Send a TCP nessage via IPv6.", tcp6_cmd},
     { NULL, NULL, NULL }
 };
 
+
 int main(void)
 {
-    /* we need a message queue for the thread running the shell in order to
-     * receive potentially fast incoming networking packets */
-    msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
-    puts("RIOT network stack example application");
+    puts("RIOT LWIP TCP/IPv6 example application");
 
     /* start shell */
     puts("All up, running the shell now");

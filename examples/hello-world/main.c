@@ -20,10 +20,12 @@
  */
 
 #include <stdio.h>
+#include "periph/gpio.h"
 
 int main(void)
 {
     puts("Hello World!");
+    gpio_set(GPIO_PIN(PB, 9));
 
     printf("You are running RIOT on a(n) %s board.\n", RIOT_BOARD);
     printf("This board features a(n) %s MCU.\n", RIOT_MCU);

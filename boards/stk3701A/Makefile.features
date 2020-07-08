@@ -1,0 +1,9 @@
+CPU = efm32
+CPU_FAM = efm32gg11
+CPU_MODEL = efm32gg11b820f2048gl192
+
+
+# Put defined MCU peripherals here (in alphabetical order)
+FEATURES_PROVIDED += periph_uart periph_uart_modecfg
+
+include $(RIOTBOARD)/common/silabs/Makefile.features
