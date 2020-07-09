@@ -88,7 +88,7 @@ static const timer_conf_t timer_config[] = {
 static const uart_conf_t uart_config[] = {
     /*{
         .dev = UART0,
-        .rx_pin = GPIO_PIN(PD, 9),
+        .rx_pin = GPIO_PIN(PE, 9),
         .tx_pin = GPIO_PIN(PE, 8),
         .loc = 1, // rg: wtf is this?
         .cmu = cmuClock_UART0,
@@ -98,7 +98,7 @@ static const uart_conf_t uart_config[] = {
         .dev = USART5,
         .rx_pin = GPIO_PIN(PE, 9),
         .tx_pin = GPIO_PIN(PE, 8),
-        .loc = 1, /* wth is this */
+        .loc = USART_ROUTELOC0_RXLOC_LOC0 | USART_ROUTELOC0_TXLOC_LOC0, // wth is this 
         .cmu = cmuClock_USART5,
         .irq = USART5_RX_IRQn
     },
